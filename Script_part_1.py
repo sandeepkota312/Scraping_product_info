@@ -5,10 +5,16 @@ import pandas as pd
 
 # URL of the Amazon site
 amazon_base_url = 'https://www.amazon.in'
+
+# part 1 output parameters
 parameters=['product_link','product_name','product_price','product_rating','product_No_of_reviews']
+
+# dictionary to store parameter values
 dataset={key: [] for key in parameters}
 for index in range(1,21):
     print('page',index)
+
+    # fetching data from url using requests
     r=req.get(f'https://www.amazon.in/s?k=bags&ref=sr_pg_{index}')
     limit=7
     time.sleep(2)
@@ -17,6 +23,8 @@ for index in range(1,21):
         time.sleep(3)
         limit-=1
     if r.status_code==200:
+
+        # extracting content from requests in lxml format
         soup=BeautifulSoup(r.content,'lxml')
         products=soup.find_all('div',class_ ="a-section a-spacing-small a-spacing-top-small")
         print(len(products),'products')
@@ -36,6 +44,7 @@ for index in range(1,21):
             except:
                 pass
     else:
+        # site didn't load
         print('site '+ f'https://www.amazon.in/s?k=bags&ref=sr_pg_{index}' + ' was not hit. Code:',r.status_code)
 
 # Convert the dictionary to a DataFrame
